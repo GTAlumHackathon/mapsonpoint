@@ -11,6 +11,7 @@ var LatLng = google.maps.LatLng;
 var marker;
 var pickedLoc;
 var route;
+var por;
 initMap();
 function calcRoute(origin, destination, callback) {
     var DirectionRequest = {
@@ -68,7 +69,7 @@ function initMap() {
         }
     });
     $('#search-place').click(function() {
-        var por = new POR($('#desired-place').val(), pickedLoc, route.destination);
+        por = new POR($('#desired-place').val(), pickedLoc, route.destination);
     });
 }
 
