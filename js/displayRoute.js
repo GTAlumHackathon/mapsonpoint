@@ -44,7 +44,7 @@ function showRouteFromForm() {
         var start = new Location(start.lat(), start.lng());
         var end = new Location(end.lat(), end.lng());
         //console.log(start, end);
-
+        route = null;
         route = new Route(start, end, leg.distance.value, leg.duration.value);
     });
 
@@ -75,6 +75,7 @@ function initMap() {
         }
     });
     $('#search-place').click(function() {
+        por = null;
         por = new POR($('#desired-place').val(), pickedLoc, route.dest);
     });
 }
@@ -123,10 +124,11 @@ function POR(name, location, destination) {
     function foundPlaces(results, status) {
         if (status === google.maps.places.PlacesServiceStatus.OK) {
             for (var i = 0; i < results.length; i++) {
-                var location = results[i].geometry.location;
+                console.log(results[i].geometry.location.lat());
+                var location = new Location(results[i].geometry.location.lat(), results[i].geometry.location.lng());
                 var currentPlace = new Place(location, currentPOR.destination);
 
-                goPlaces(p.location.toGoogleLatLng, currentPOR.toGoogleLatLng, placeLocationCallback);
+                goPlaces(currentPlace.location.toGoogleLatLng(), currentPOR.location.toGoogleLatLng(), placeLocationCallback);
 
                 function placeLocationCallback(data) {
                     var trip = data.rows[0].elements[0];
@@ -134,7 +136,7 @@ function POR(name, location, destination) {
                         currentPlace.distanceFromPOR = trip.distance.value;
                         currentPlace.distanceFromPOR = trip.duration.value;
                     }
-                    goPlaces(this.location.toGoogleLatLng(), this.destination.toGoogleLatLng(), setPlaceRemainders);
+                    goPlaces(currentPlace.location.toGoogleLatLng(), currentPlace.destination.toGoogleLatLng(), setPlaceRemainders);
 
                   function setPlaceRemainders(data) {
                     var trip = data.rows[0].elements[0];
@@ -150,6 +152,7 @@ function POR(name, location, destination) {
                 return a.distanceToDestination + a.distanceFromPOR - b.distanceFromPOR - b.distanceToDestination;
             });
             places.reverse();
+            currentPOR.places = places;
         }
     }
 }
