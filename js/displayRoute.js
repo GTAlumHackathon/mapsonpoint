@@ -51,7 +51,7 @@ function initMap() {
         latLng = e.latLng;
         lat = latLng.lat();
         lng = latLng.lng();
-        pickedLoc = Location(lat, lng);
+        pickedLoc = new Location(lat, lng);
         if (marker) {
             marker.setMap(null);
         }
@@ -62,7 +62,7 @@ function initMap() {
         });
     });
     $('#search-place').click(function() {
-        var por = POR($('#desired-place').val(), pickedLoc, $('#end').val());
+        var por = new POR($('#desired-place').val(), pickedLoc, $('#end').val());
     });
 }
 
