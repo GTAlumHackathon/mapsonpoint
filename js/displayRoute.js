@@ -4,7 +4,7 @@ var map = new google.maps.Map(document.getElementById('map'), {
     });
 var MS;
 var places = [];
-var service = new google.maps.places.PlacesService(map);
+var PS = new google.maps.places.PlacesService(map);
 var DS = new google.maps.DirectionsService;
 var DR = new google.maps.DirectionsRenderer;
 var LatLng = google.maps.LatLng;
@@ -34,7 +34,7 @@ function showRouteFromForm() {
 }
 function initMap() {
     MS = new google.maps.DistanceMatrixService();
-    var p = new POR(1, new Location(-34.397, 150.644), new Location(-34.399, 150.655));
+    var p = new POR("McDonalds", new Location(55.930385, -3.118425), new Location(50.087692, 14.421150));
 
     
         
@@ -66,24 +66,29 @@ function POR(name, location, destination) {
   this.name = name;
   this.location = location;
   this.destination = destination; 
-
+  currentPOR = this;
   goPlaces(this.location.toGoogleLatLng(), this.destination.toGoogleLatLng(), setRemainders);
 
   function setRemainders(data) {
-    console.log(data);
+    var trip = data.rows[0].elements[0];
+    if(trip.status == "OK") {
+        currentPOR.distanceToDestination = trip.distance.value;
+        currentPOR.durationToDestination = trip.duration.value;
+
+          PS.nearbySearch({
+            location: currentPOR.location,
+            radius: 5000,
+            types: [currentPOR.name],
+            keyword: currentPOR.name
+          }, foundPlaces);
+    }
   }
 
-  this.durationLeft = function(destination) {
-    
-  };
-
-  this.distanceLeft = function(destination) {
-    //use route.destination
-  };
-
-  this.places = function(places) {
-    //take google places, create place objects and sort
-  }
+    function foundPlaces(results, status) {
+        if (status === google.maps.places.PlacesServiceStatus.OK) {
+            console.log(results);
+        }
+    }
 }
 
 function Place(location, distanceFromPOR, durationFromPOR, destination) {
@@ -91,14 +96,17 @@ function Place(location, distanceFromPOR, durationFromPOR, destination) {
   this.distanceFromPOR = distanceFromPOR;
   this.durationFromPOR = distanceFromPOR;
   this.destination = destination;
-  
-  this.distanceToDestination = function() {
+  currentPlace = this;
 
-  };
+  goPlaces(this.location.toGoogleLatLng(), this.destination.toGoogleLatLng(), setPlaceRemainders);
 
-  this.durationToDestination = function() {
-
-  };
+  function setPlaceRemainders(data) {
+    var trip = data.rows[0].elements[0];
+    if(trip.status == "OK") {
+        currentPlace.distanceToDestination = trip.distance.value;
+        currentPlace.durationToDestination = trip.duration.value;
+    }
+  }
 
 }
 
@@ -112,6 +120,7 @@ function goPlaces(origin, destination, callback) {
       travelMode: google.maps.TravelMode.DRIVING,
     }, callback);
 }
+
 var service = new google.maps.places.PlacesService(map);
 
 function PORSearch(por){ 
@@ -131,11 +140,12 @@ function callback(results, status) {
 function initPlaces(results) {
   for (var i = 0; i < results.length; i++) {
     var location = results[i].geometry.location;
-    var newRoute = Route(here, there);
-    var distanceFromPOR = newRoute.distance;
-    var durationFromPOR = newRoute.duration();
-    var destination = Route.dest;
-    var newPlace = Place(location, distanceFromPOR, durationFromPOR, destination);
-    places.push(newPlace);
+    //needs rework
+    //var newRoute = Route(here, there);
+    //var distanceFromPOR = newRoute.distance;
+    //var durationFromPOR = newRoute.duration();
+    //var destination = Route.dest;
+    //var newPlace = Place(location, distanceFromPOR, durationFromPOR, destination);
+    //places.push(newPlace);
   }
 }
