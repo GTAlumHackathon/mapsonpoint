@@ -153,8 +153,37 @@ function POR(name, location, destination) {
             });
             places.reverse();
             currentPOR.places = places;
+            showRoutesWithDetour();
         }
     }
+}
+
+function calcWrapper(start, end, renderer) {
+    calcRoute(start.toGoogleLatLng(), end.toGoogleLatLng(), function(response, status) {
+        if (status === google.maps.DirectionsStatus.OK) {
+            renderer.setDirections(response); // From the .route()'s callback above
+            renderer.setMap(map);
+        } else {
+            console.log('Directions request failed due to ' + status);
+        }
+    });
+}
+
+function showRoutesWithDetour() {
+    var DR_start_por = new google.maps.DirectionsRenderer;
+    var DR_por_place = new google.maps.DirectionsRenderer;
+    var DR_place_dest = new google.maps.DirectionsRenderer;
+
+    calcWrapper(route.start, por.location, DR_start_por);
+    calcWrapper(por.location, por.places[0].location, DR_por_place);
+    calcWrapper(por.places[0].location, route.dest, DR_place_dest);
+    DR.setOptions({
+        polylineOptions: {
+            strokeColor: "red"
+        }
+    });
+    DR.setMap(map);
+
 }
 
 function Place(location, destination) {
