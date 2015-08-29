@@ -39,27 +39,46 @@
           <p class="lead">Wouldn't it be great if you could tell your navigation to find a point of interest at a point in your route? We thought so too!</p>
       </div>
       <form id="start-form">
-      <div class="col-xs-6">
-          <div class="input-group">
-              <span class="input-group-addon" id="basic-addon1"><i class="fa fa-map-marker"></i></span>
-              <input type="text" class="form-control" id="start" placeholder="Start" aria-describedby="basic-addon1">
-          </div>
+          <div class="col-xs-6">
+              <div class="input-group">
+                  <span class="input-group-addon" id="basic-addon1"><i class="fa fa-map-marker"></i></span>
+                  <input type="text" class="form-control" id="start" placeholder="Start" aria-describedby="basic-addon1">
+              </div>
 
-          <div class="input-group">
-              <span class="input-group-addon" id="basic-addon1"><i class="fa fa-map-marker"></i></span>
-              <input type="text" class="form-control" id="end" placeholder="End" aria-describedby="basic-addon1">
-          </div>
-          <button type="submit" id="search-route" class="pull-right btn btn-default btn-primary">Search <i class="fa fa-search"></i></button>
+              <div class="input-group">
+                  <span class="input-group-addon" id="basic-addon1"><i class="fa fa-map-marker"></i></span>
+                  <input type="text" class="form-control" id="end" placeholder="End" aria-describedby="basic-addon1">
+              </div>
+              <button type="submit" id="search-route" class="pull-right btn btn-default btn-primary">Search <i class="fa fa-search"></i></button>
 
-      </div>
+          </div>
       </form>
   </div>
   <div class="panel panel-default" id="map-panel">
       <div class="panel-body">
-       <div id="map"></div>
-   </div>
+         <div id="map"></div>
+         <div class="instr-panel">
+            <section id="pick-a-spot">
+                <p class="lead">Click/Tap a point on the route to stop.</p>
+            </section>
+            <section id="type-a-place" class="hide-c">
+             <p class="lead">Type a place to search for near your point.</p>
+             <div class="input-group">
+              <span class="input-group-addon" id="basic-addon1"><i class="fa fa-map-marker"></i></span>
+              <input type="text" class="form-control" id="desired-place" placeholder="Place" aria-describedby="basic-addon1">
+          </div>
+          <button type="submit" id="search-place" class="pull-right btn btn-default btn-primary">Search <i class="fa fa-search"></i></button>
+          </section>
+      </div>
+  </div>
+
+
+
 </div>
 </div>
+
+
+
 
 
 <footer class="footer">
@@ -89,5 +108,5 @@
 src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCiIyxZgvP5U8Z7XFcaZttgCXAzJo5Q1T0&libraries=places">
 </script>
 <script src="js/displayRoute.js"></script>
-  </body>
+</body>
 </html>

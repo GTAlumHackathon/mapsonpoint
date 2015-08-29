@@ -8,8 +8,12 @@ var service = new google.maps.places.PlacesService(map);
 var DS = new google.maps.DirectionsService;
 var DR = new google.maps.DirectionsRenderer;
 var LatLng = google.maps.LatLng;
+var marker;
+var pickedLoc;
+var route;
+var por;
 initMap();
-function showRoute(origin, destination) {
+function calcRoute(origin, destination, callback) {
     var DirectionRequest = {
         origin: origin,
         destination: destination,
@@ -17,31 +21,61 @@ function showRoute(origin, destination) {
     };
     DS.route(
         DirectionRequest,
-        function(response, status) {
-            if (status === google.maps.DirectionsStatus.OK) {
-                DR.setDirections(response); // From the .route()'s callback above
-                DR.setMap(map);
-            } else {
-                console.log('Directions request failed due to ' + status);
-            }
-        }
+        callback
     );
 }
 
+function showEnterPlace() {
+    $('#pick-a-spot').hide();
+    $('#type-a-place').show();
+}
 
 function showRouteFromForm() {
-    showRoute($('#start').val(), $('#end').val());
+    calcRoute($('#start').val(), $('#end').val(), function(response, status) {
+        if (status === google.maps.DirectionsStatus.OK) {
+            DR.setDirections(response); // From the .route()'s callback above
+            DR.setMap(map);
+        } else {
+            console.log('Directions request failed due to ' + status);
+        }
+        var leg = response.routes[0].legs[0];
+
+        var start = leg.start_location, end = leg.end_location;
+        var start = new Location(start.lat(), start.lng());
+        var end = new Location(end.lat(), end.lng());
+        //console.log(start, end);
+
+        route = new Route(start, end, leg.distance.value, leg.duration.value);
+    });
+
 }
 function initMap() {
     MS = new google.maps.DistanceMatrixService();
     var p = new POR(1, new Location(-34.397, 150.644), new Location(-34.399, 150.655));
-
-    
-        
     $('#search-route').click(showRouteFromForm);
     $('#start-form').click(function(event) {
         showRouteFromForm();
         event.preventDefault();
+    });
+    map.addListener('click', function(e) {
+        if (route){
+            showEnterPlace();
+            latLng = e.latLng;
+            lat = latLng.lat();
+            lng = latLng.lng();
+            pickedLoc = new Location(lat, lng);
+            if (marker) {
+                marker.setMap(null);
+            }
+            marker = new google.maps.Marker({
+                map: map,
+                animation: google.maps.Animation.DROP,
+                position: {lat: lat, lng: lng}
+            });
+        }
+    });
+    $('#search-place').click(function() {
+        por = new POR($('#desired-place').val(), pickedLoc, route.dest);
     });
 }
 
@@ -114,18 +148,17 @@ function goPlaces(origin, destination, callback) {
 }
 var service = new google.maps.places.PlacesService(map);
 
-function PORSearch(){ 
+function PORSearch(por){ 
   service.nearbySearch({
-    location: POR.location,
+    location: por.location,
     radius: 500,
-    types: [POR.name]
+    types: [por.name]
   }, callback);
 }
 
 function callback(results, status) {
   if (status === google.maps.places.PlacesServiceStatus.OK) {
-    var places ;
-    initPlacesArr(results);
+    getPOR().places(results);
   }
 }
 
