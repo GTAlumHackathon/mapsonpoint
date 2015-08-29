@@ -91,3 +91,14 @@ html, body {
     margin-top: 50px;
     width: 100%;
 }
+#start-form > p {
+    text-align: center;
+    margin-left: 18px;
+    font-size: 20px;
+}
+#pick-a-spot > p {
+    text-align: center;
+}
+#type-a-place > p {
+    text-align: center;
+}
