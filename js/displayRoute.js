@@ -76,7 +76,6 @@ function showRouteFromForm() {
 }
 function initMap() {
     MS = new google.maps.DistanceMatrixService();
-    var p = new POR("McDonalds", new Location(55.930385, -3.118425), new Location(50.087692, 14.421150));
     $('#search-route').click(function(event) {
         event.preventDefault();
         showRouteFromForm(); 
@@ -105,14 +104,15 @@ function initMap() {
         }
     });
     $('#search-place').click(function() {
-        var cleanUpList = [, DR_start_por, DR_por_place, DR_place_dest];
+        var cleanUpList = [DR_start_por, DR_por_place, DR_place_dest];
     for(var i in cleanUpList) {
         if(cleanUpList[i] != undefined)
         cleanUpList[i].setMap(null);
     }
         por = null;
         por = new POR($('#desired-place').val(), pickedLoc, route.dest);
-
+        $('#map-panel').css('height', '900px');
+        $('#directions-panel').show();
     });
 }
 
@@ -238,6 +238,7 @@ function showRoutesWithDetour() {
         }
         }
     );
+    DR_place_dest.setPanel(document.getElementById('directions-panel'));
     DR.setOptions({
         polylineOptions: {
             strokeColor: "red"
