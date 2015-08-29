@@ -8,6 +8,8 @@ var service = new google.maps.places.PlacesService(map);
 var DS = new google.maps.DirectionsService;
 var DR = new google.maps.DirectionsRenderer;
 var LatLng = google.maps.LatLng;
+var marker;
+var pickedLoc;
 initMap();
 function showRoute(origin, destination) {
     var DirectionRequest = {
@@ -28,6 +30,10 @@ function showRoute(origin, destination) {
     );
 }
 
+function showEnterPlace() {
+    $('#pick-a-spot').hide();
+    $('#type-a-place').show();
+}
 
 function showRouteFromForm() {
     showRoute($('#start').val(), $('#end').val());
@@ -35,13 +41,28 @@ function showRouteFromForm() {
 function initMap() {
     MS = new google.maps.DistanceMatrixService();
     var p = new POR(1, new Location(-34.397, 150.644), new Location(-34.399, 150.655));
-
-    
-        
     $('#search-route').click(showRouteFromForm);
     $('#start-form').click(function(event) {
         showRouteFromForm();
         event.preventDefault();
+    });
+    map.addListener('click', function(e) {
+        showEnterPlace();
+        latLng = e.latLng;
+        lat = latLng.lat();
+        lng = latLng.lng();
+        pickedLoc = Location(lat, lng);
+        if (marker) {
+            marker.setMap(null);
+        }
+        marker = new google.maps.Marker({
+            map: map,
+            animation: google.maps.Animation.DROP,
+            position: {lat: lat, lng: lng}
+        });
+    });
+    $('#search-place').click(function() {
+        var por = POR($('#desired-place').val(), pickedLoc, $('#end').val());
     });
 }
 
