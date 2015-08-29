@@ -124,8 +124,7 @@ function PORSearch(){
 
 function callback(results, status) {
   if (status === google.maps.places.PlacesServiceStatus.OK) {
-    var places ;
-    initPlacesArr(results);
+    getPOR().places(results);
   }
 }
 
