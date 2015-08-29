@@ -67,6 +67,8 @@ function POR(name, location, destination) {
   this.location = location;
   this.destination = destination; 
   currentPOR = this;
+  this.places = [];
+
   goPlaces(this.location.toGoogleLatLng(), this.destination.toGoogleLatLng(), setRemainders);
 
   function setRemainders(data) {
@@ -79,35 +81,50 @@ function POR(name, location, destination) {
             location: currentPOR.location,
             radius: 5000,
             types: [currentPOR.name],
-            keyword: currentPOR.name
+            keyword: currentPOR.name,
+            rankBy: google.maps.places.RankBy.DISTANCE
           }, foundPlaces);
     }
   }
 
     function foundPlaces(results, status) {
         if (status === google.maps.places.PlacesServiceStatus.OK) {
-            console.log(results);
+            for (var i = 0; i < results.length; i++) {
+                var location = results[i].geometry.location;
+                var currentPlace = new Place(location, currentPOR.destination);
+
+                goPlaces(p.location.toGoogleLatLng, currentPOR.toGoogleLatLng, placeLocationCallback);
+
+                function placeLocationCallback(data) {
+                    var trip = data.rows[0].elements[0];
+                    if(trip.status == "OK") {
+                        currentPlace.distanceFromPOR = trip.distance.value;
+                        currentPlace.distanceFromPOR = trip.duration.value;
+                    }
+                    goPlaces(this.location.toGoogleLatLng(), this.destination.toGoogleLatLng(), setPlaceRemainders);
+
+                  function setPlaceRemainders(data) {
+                    var trip = data.rows[0].elements[0];
+                    if(trip.status == "OK") {
+                        currentPlace.distanceToDestination = trip.distance.value;
+                        currentPlace.durationToDestination = trip.duration.value;
+                    }
+                  }
+                }                
+                places.push(currentPlace);
+            }
+            places.sort(function(a, b){
+                return a.distanceToDestination + a.distanceFromPOR - b.distanceFromPOR - b.distanceToDestination;
+            });
+            places.reverse();
         }
     }
 }
 
-function Place(location, distanceFromPOR, durationFromPOR, destination) {
+function Place(location, destination) {
   this.location = location;
-  this.distanceFromPOR = distanceFromPOR;
-  this.durationFromPOR = distanceFromPOR;
   this.destination = destination;
   currentPlace = this;
-
-  goPlaces(this.location.toGoogleLatLng(), this.destination.toGoogleLatLng(), setPlaceRemainders);
-
-  function setPlaceRemainders(data) {
-    var trip = data.rows[0].elements[0];
-    if(trip.status == "OK") {
-        currentPlace.distanceToDestination = trip.distance.value;
-        currentPlace.durationToDestination = trip.duration.value;
-    }
-  }
-
 }
 
 
@@ -119,17 +136,4 @@ function goPlaces(origin, destination, callback) {
       destinations: [destination],
       travelMode: google.maps.TravelMode.DRIVING,
     }, callback);
-}
-
-function initPlaces(results) {
-  for (var i = 0; i < results.length; i++) {
-    var location = results[i].geometry.location;
-    //needs rework
-    //var newRoute = Route(here, there);
-    //var distanceFromPOR = newRoute.distance;
-    //var durationFromPOR = newRoute.duration();
-    //var destination = Route.dest;
-    //var newPlace = Place(location, distanceFromPOR, durationFromPOR, destination);
-    //places.push(newPlace);
-  }
 }
