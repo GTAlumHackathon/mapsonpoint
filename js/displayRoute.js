@@ -121,6 +121,22 @@ function goPlaces(origin, destination, callback) {
     }, callback);
 }
 
+var service = new google.maps.places.PlacesService(map);
+
+function PORSearch(por){ 
+  service.nearbySearch({
+    location: por.location,
+    radius: 500,
+    types: [por.name]
+  }, callback);
+}
+
+function callback(results, status) {
+  if (status === google.maps.places.PlacesServiceStatus.OK) {
+    getPOR().places(results);
+  }
+}
+
 function initPlaces(results) {
   for (var i = 0; i < results.length; i++) {
     var location = results[i].geometry.location;
