@@ -4,18 +4,19 @@ function Location (lat, lng) {
 }
 
 // Route Class
-function Route(start, dest, duration) {
+function Route(start, dest, distance, duration) {
   this.start = start;
   this.dest = dest;
+  this.distance = distance;
   this.duration = duration;
 }
 
-function POR(name, location, route) {
+function POR(name, location, destination) {
 	this.name = name;
 	this.location = location;
 
 	this.durationLeft = function(destination) {
-		//use route.destination
+		
 	};
 
 	this.distanceLeft = function(destination) {
