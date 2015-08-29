@@ -4,6 +4,12 @@ var map = new google.maps.Map(document.getElementById('map'), {
     });
 var MS;
 var places = [];
+<<<<<<< HEAD
+=======
+var service = new google.maps.places.PlacesService(map);
+
+initMap();
+>>>>>>> 81f8ecc54afd1eec165cc8341bc541c249cd698a
 var DS = new google.maps.DirectionsService;
 var DR = new google.maps.DirectionsRenderer;
 var LatLng = google.maps.LatLng;
@@ -43,7 +49,6 @@ function initMap() {
         event.preventDefault();
     });
 }
-
 
 function Location (lat, lng) {
   this.lat = lat;
@@ -114,6 +119,13 @@ function goPlaces(origin, destination, callback) {
 }
 var service = new google.maps.places.PlacesService(map);
 
+function PORSearch(){ 
+  service.nearbySearch({
+    location: POR.location,
+    radius: 500,
+    types: [POR.name]
+  }, callback);
+}
 
 function callback(results, status) {
   if (status === google.maps.places.PlacesServiceStatus.OK) {
