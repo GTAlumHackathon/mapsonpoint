@@ -10,8 +10,9 @@ var DR = new google.maps.DirectionsRenderer;
 var LatLng = google.maps.LatLng;
 var marker;
 var pickedLoc;
+var route;
 initMap();
-function showRoute(origin, destination) {
+function calcRoute(origin, destination, callback) {
     var DirectionRequest = {
         origin: origin,
         destination: destination,
@@ -19,14 +20,7 @@ function showRoute(origin, destination) {
     };
     DS.route(
         DirectionRequest,
-        function(response, status) {
-            if (status === google.maps.DirectionsStatus.OK) {
-                DR.setDirections(response); // From the .route()'s callback above
-                DR.setMap(map);
-            } else {
-                console.log('Directions request failed due to ' + status);
-            }
-        }
+        callback
     );
 }
 
@@ -36,7 +30,17 @@ function showEnterPlace() {
 }
 
 function showRouteFromForm() {
-    showRoute($('#start').val(), $('#end').val());
+    calcRoute($('#start').val(), $('#end').val(), function(response, status) {
+        if (status === google.maps.DirectionsStatus.OK) {
+            DR.setDirections(response); // From the .route()'s callback above
+            DR.setMap(map);
+        } else {
+            console.log('Directions request failed due to ' + status);
+        }
+        var leg = response.routes[0].legs[0];
+        route = new Route($('#start').val(), $('#end').val(), leg.distance.value, leg.duration.value);
+    });
+
 }
 function initMap() {
     MS = new google.maps.DistanceMatrixService();
@@ -47,22 +51,24 @@ function initMap() {
         event.preventDefault();
     });
     map.addListener('click', function(e) {
-        showEnterPlace();
-        latLng = e.latLng;
-        lat = latLng.lat();
-        lng = latLng.lng();
-        pickedLoc = new Location(lat, lng);
-        if (marker) {
-            marker.setMap(null);
+        if (route){
+            showEnterPlace();
+            latLng = e.latLng;
+            lat = latLng.lat();
+            lng = latLng.lng();
+            pickedLoc = new Location(lat, lng);
+            if (marker) {
+                marker.setMap(null);
+            }
+            marker = new google.maps.Marker({
+                map: map,
+                animation: google.maps.Animation.DROP,
+                position: {lat: lat, lng: lng}
+            });
         }
-        marker = new google.maps.Marker({
-            map: map,
-            animation: google.maps.Animation.DROP,
-            position: {lat: lat, lng: lng}
-        });
     });
     $('#search-place').click(function() {
-        var por = new POR($('#desired-place').val(), pickedLoc, $('#end').val());
+        var por = new POR($('#desired-place').val(), pickedLoc, route.destination);
     });
 }
 
