@@ -7,12 +7,33 @@ var places = [];
 var PS = new google.maps.places.PlacesService(map);
 var DS = new google.maps.DirectionsService;
 var DR = new google.maps.DirectionsRenderer;
+var DR_start_por;
+var DR_por_place;
+var DR_place_dest;
+
 var LatLng = google.maps.LatLng;
 var marker;
 var pickedLoc;
 var route;
 var por;
 initMap();
+
+function cleanUp() {
+    var cleanUpList = [DR, DR_start_por, DR_por_place, DR_place_dest];
+    for(var i in cleanUpList) {
+        if(cleanUpList[i] != undefined)
+        cleanUpList[i].setMap(null);
+    }
+    DR = new google.maps.DirectionsRenderer;
+    $('#desired-place').val('');
+    $('#pick-a-spot').show();
+    $('#type-a-place').hide();
+    por = null;
+    if (marker) {
+        marker.setMap(null);
+    }
+}
+
 function calcRoute(origin, destination, callback) {
     var DirectionRequest = {
         origin: origin,
@@ -31,6 +52,7 @@ function showEnterPlace() {
 }
 
 function showRouteFromForm() {
+    cleanUp();
     calcRoute($('#start').val(), $('#end').val(), function(response, status) {
         if (status === google.maps.DirectionsStatus.OK) {
             DR.setDirections(response); // From the .route()'s callback above
@@ -52,10 +74,15 @@ function showRouteFromForm() {
 function initMap() {
     MS = new google.maps.DistanceMatrixService();
     var p = new POR("McDonalds", new Location(55.930385, -3.118425), new Location(50.087692, 14.421150));
-    $('#search-route').click(showRouteFromForm);
-    $('#start-form').click(function(event) {
-        showRouteFromForm();
+    $('#search-route').click(function(event) {
         event.preventDefault();
+        showRouteFromForm(); 
+        
+    });
+    $('#start-form').submit(function(event) {
+        event.preventDefault();
+        showRouteFromForm();
+        
     });
     map.addListener('click', function(e) {
         if (route){
@@ -170,9 +197,9 @@ function calcWrapper(start, end, renderer) {
 }
 
 function showRoutesWithDetour() {
-    var DR_start_por = new google.maps.DirectionsRenderer;
-    var DR_por_place = new google.maps.DirectionsRenderer;
-    var DR_place_dest = new google.maps.DirectionsRenderer;
+    DR_start_por = new google.maps.DirectionsRenderer;
+    DR_por_place = new google.maps.DirectionsRenderer;
+    DR_place_dest = new google.maps.DirectionsRenderer;
 
     calcWrapper(route.start, por.location, DR_start_por);
     calcWrapper(por.location, por.places[0].location, DR_por_place);
