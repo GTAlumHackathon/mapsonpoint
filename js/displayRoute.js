@@ -206,13 +206,38 @@ function calcWrapper(start, end, renderer) {
 }
 
 function showRoutesWithDetour() {
-    DR_start_por = new google.maps.DirectionsRenderer;
-    DR_por_place = new google.maps.DirectionsRenderer;
     DR_place_dest = new google.maps.DirectionsRenderer;
 
-    calcWrapper(route.start, por.location, DR_start_por);
-    calcWrapper(por.location, por.places[0].location, DR_por_place);
-    calcWrapper(por.places[0].location, route.dest, DR_place_dest);
+    var items = [por.location, por.places[0].location];
+    var waypoints = [];
+    for (var i = 0; i < items.length; i++) {
+        var address = items[i];
+        if (address !== "") {
+            waypoints.push({
+                location: address,
+                stopover: true
+            });
+        }
+    }
+    console.log(waypoints)
+    var request = {
+            origin: route.start,
+            destination: route.dest,
+            waypoints: waypoints, //an array of waypoints
+            optimizeWaypoints: false, //set to true if you want google to determine the shortest route or false to use the order specified.
+            travelMode: google.maps.DirectionsTravelMode.DRIVING
+        };
+    DS.route(
+        request,
+        function(response, status) {
+            if (status === google.maps.DirectionsStatus.OK) {
+            DR_place_dest.setDirections(response); // From the .route()'s callback above
+            DR_place_dest.setMap(map);
+        } else {
+            console.log('Directions request failed due to ' + status);
+        }
+        }
+    );
     DR.setOptions({
         polylineOptions: {
             strokeColor: "red"
