@@ -4,12 +4,7 @@ var map = new google.maps.Map(document.getElementById('map'), {
     });
 var MS;
 var places = [];
-<<<<<<< HEAD
-=======
 var service = new google.maps.places.PlacesService(map);
-
-initMap();
->>>>>>> 81f8ecc54afd1eec165cc8341bc541c249cd698a
 var DS = new google.maps.DirectionsService;
 var DR = new google.maps.DirectionsRenderer;
 var LatLng = google.maps.LatLng;
