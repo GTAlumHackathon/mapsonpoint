@@ -28,3 +28,7 @@ html, body {
 .hide-c {
     display: none;
 }
+
+.full-width {
+    width: 100%;
+}
