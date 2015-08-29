@@ -1,17 +1,12 @@
 var map;
-function initMap() {
-  map = new google.maps.Map(document.getElementById('map'), {
-        center: {lat: -34.397, lng: 150.644},
-        zoom: 8
-  });
-  var DS = new google.maps.DirectionsService;
-  var DR = new google.maps.DirectionsRenderer;
-  var LatLng = google.maps.LatLng;
-
-  $('#search-route').click(function () {
+initMap();
+var DS = new google.maps.DirectionsService;
+var DR = new google.maps.DirectionsRenderer;
+var LatLng = google.maps.LatLng;
+function showRoute(origin, destination) {
     var DirectionRequest = {
-        origin: $('#start').val(),
-        destination: $('#end').val(),
+        origin: origin,
+        destination: destination,
         travelMode: google.maps.TravelMode.DRIVING
     };
     DS.route(
@@ -24,7 +19,24 @@ function initMap() {
                 console.log('Directions request failed due to ' + status);
             }
         }
-        );
-});
+    );
+}
+
+
+function showRouteFromForm() {
+    showRoute($('#start').val(), $('#end').val());
+}
+function initMap() {
+    map = new google.maps.Map(document.getElementById('map'), {
+        center: {lat: -34.397, lng: 150.644},
+        zoom: 8
+    });
+    
+        
+    $('#search-route').click(showRouteFromForm);
+    $('#start-form').click(function(event) {
+        showRouteFromForm();
+        event.preventDefault();
+    });
 }
 
