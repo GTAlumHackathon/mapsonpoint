@@ -1,4 +1,5 @@
 var map;
+var places = [];
 initMap();
 var DS = new google.maps.DirectionsService;
 var DR = new google.maps.DirectionsRenderer;
@@ -40,3 +41,31 @@ function initMap() {
     });
 }
 
+
+
+  var service = new google.maps.places.PlacesService(map);
+  service.nearbySearch({
+    location: POR.location,
+    radius: 500,
+    types: [POR.name]
+  }, callback);
+}
+
+function callback(results, status) {
+  if (status === google.maps.places.PlacesServiceStatus.OK) {
+    var places ;
+    initPlacesArr(results);
+  }
+}
+
+function initPlaces(results) {
+  for (var i = 0; i < results.length; i++) {
+    var location = results[i].geometry.location;
+    var newRoute = Route(here, there);
+    var distanceFromPOR = newRoute.distance;
+    var durationFromPOR = newRoute.duration();
+    var destination = Route.dest;
+    var newPlace = Place(location, distanceFromPOR, durationFromPOR, destination);
+    places.push(newPlace);
+  }
+}
