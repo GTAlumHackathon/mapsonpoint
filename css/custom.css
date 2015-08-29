@@ -10,6 +10,10 @@
     height: 500px;
     margin-top: 20px;
 }
+#map-panel > .panel-body {
+    height: 500px;
+}
+
 html, body { 
     margin: 0; padding: 0; }
 
