@@ -1,5 +1,7 @@
 var map;
 var places = [];
+var service = new google.maps.places.PlacesService(map);
+
 initMap();
 var DS = new google.maps.DirectionsService;
 var DR = new google.maps.DirectionsRenderer;
@@ -42,14 +44,13 @@ function initMap() {
 }
 
 
-
-  var service = new google.maps.places.PlacesService(map);
+function PORSearch(){ 
   service.nearbySearch({
     location: POR.location,
     radius: 500,
     types: [POR.name]
   }, callback);
-
+}
 
 function callback(results, status) {
   if (status === google.maps.places.PlacesServiceStatus.OK) {
