@@ -114,11 +114,11 @@ function goPlaces(origin, destination, callback) {
 }
 var service = new google.maps.places.PlacesService(map);
 
-function PORSearch(){ 
+function PORSearch(por){ 
   service.nearbySearch({
-    location: POR.location,
+    location: por.location,
     radius: 500,
-    types: [POR.name]
+    types: [por.name]
   }, callback);
 }
 
