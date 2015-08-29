@@ -105,8 +105,14 @@ function initMap() {
         }
     });
     $('#search-place').click(function() {
+        var cleanUpList = [, DR_start_por, DR_por_place, DR_place_dest];
+    for(var i in cleanUpList) {
+        if(cleanUpList[i] != undefined)
+        cleanUpList[i].setMap(null);
+    }
         por = null;
         por = new POR($('#desired-place').val(), pickedLoc, route.dest);
+
     });
 }
 
