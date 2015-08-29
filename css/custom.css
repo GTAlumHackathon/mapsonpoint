@@ -1,0 +1,22 @@
+#map {
+    height: 400px;
+    margin-left: 20px;
+    margin-right: 20px;
+    float: left;
+    width: 50%;
+}    
+
+#map-panel {
+    height: 500px;
+    margin-top: 20px;
+}
+html, body { 
+    margin: 0; padding: 0; }
+
+.input-group {
+    margin-bottom: 10px;
+}
+
+#search-route {
+    text-shadow: none;
+}

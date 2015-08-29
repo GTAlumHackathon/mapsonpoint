@@ -5,12 +5,11 @@ html {
   min-height: 100%;
 }
 body {
-  /* Margin bottom by footer height */
-  margin-bottom: 60px;
+   display: flex;
+  min-height: 100vh;
+  flex-direction: column;
 }
 .footer {
-  position: absolute;
-  bottom: 0;
   width: 100%;
   /* Set the fixed height of the footer here */
   height: 60px;
@@ -25,7 +24,7 @@ body {
 .container {
   width: auto;
   max-width: 680px;
-  padding: 0 15px;
+  flex: 1;
 }
 .container .text-muted {
   margin: 20px 0;
