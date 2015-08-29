@@ -1,6 +1,6 @@
 var map = new google.maps.Map(document.getElementById('map'), {
-        center: {lat: -34.397, lng: 150.644},
-        zoom: 8
+        center: {lat: 39, lng:  -95},
+        zoom: 3
     });
 var MS;
 var places = [];
@@ -68,6 +68,9 @@ function showRouteFromForm() {
         //console.log(start, end);
         route = null;
         route = new Route(start, end, leg.distance.value, leg.duration.value);
+        $('html,body').animate({
+         scrollTop: $('#map-panel').offset().top
+       }, 1000);
     });
 
 }

@@ -3,11 +3,11 @@
     margin-left: 20px;
     margin-right: 20px;
     float: left;
-    width: 50%;
+    width: 90%;
 }    
 
 #map-panel {
-    height: 500px;
+    height: 700px;
     margin-top: 20px;
 }
 #map-panel > .panel-body {
