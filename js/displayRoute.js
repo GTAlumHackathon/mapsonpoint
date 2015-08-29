@@ -113,7 +113,6 @@ function POR(name, location, destination) {
 
           PS.nearbySearch({
             location: currentPOR.location,
-            radius: 5000,
             types: [currentPOR.name],
             keyword: currentPOR.name,
             rankBy: google.maps.places.RankBy.DISTANCE
