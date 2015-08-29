@@ -39,7 +39,13 @@ function showRouteFromForm() {
             console.log('Directions request failed due to ' + status);
         }
         var leg = response.routes[0].legs[0];
-        route = new Route($('#start').val(), $('#end').val(), leg.distance.value, leg.duration.value);
+
+        var start = leg.start_location, end = leg.end_location;
+        var start = new Location(start.lat(), start.lng());
+        var end = new Location(end.lat(), end.lng());
+        //console.log(start, end);
+
+        route = new Route(start, end, leg.distance.value, leg.duration.value);
     });
 
 }
@@ -69,7 +75,7 @@ function initMap() {
         }
     });
     $('#search-place').click(function() {
-        por = new POR($('#desired-place').val(), pickedLoc, route.destination);
+        por = new POR($('#desired-place').val(), pickedLoc, route.dest);
     });
 }
 
