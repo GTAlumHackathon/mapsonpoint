@@ -24,3 +24,7 @@ html, body {
 #search-route {
     text-shadow: none;
 }
+
+.hide-c {
+    display: none;
+}
