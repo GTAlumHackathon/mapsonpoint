@@ -49,7 +49,7 @@ function initMap() {
     radius: 500,
     types: [POR.name]
   }, callback);
-}
+
 
 function callback(results, status) {
   if (status === google.maps.places.PlacesServiceStatus.OK) {
