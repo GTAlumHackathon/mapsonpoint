@@ -139,6 +139,7 @@ function POR(name, location, destination) {
   this.destination = destination; 
   currentPOR = this;
   this.places = [];
+  currentPlaces = this.places;
 
   goPlaces(this.location.toGoogleLatLng(), this.destination.toGoogleLatLng(), setRemainders);
 
@@ -159,7 +160,7 @@ function POR(name, location, destination) {
 
     function foundPlaces(results, status) {
         if (status === google.maps.places.PlacesServiceStatus.OK) {
-            for (var i = 0; i < results.length; i++) {
+            for (var i = 0; i < 1; i++) {
                 console.log(results[i].geometry.location.lat());
                 var location = new Location(results[i].geometry.location.lat(), results[i].geometry.location.lng());
                 var currentPlace = new Place(location, currentPOR.destination);
@@ -179,17 +180,18 @@ function POR(name, location, destination) {
                     if(trip.status == "OK") {
                         currentPlace.distanceToDestination = trip.distance.value;
                         currentPlace.durationToDestination = trip.duration.value;
+                        currentPlaces.push(currentPlace);
+                        currentPlaces.sort(function(a, b){
+                            return a.distanceToDestination + a.distanceFromPOR - b.distanceFromPOR - b.distanceToDestination;
+                        });
+                        currentPlaces.reverse();
+                        currentPOR.places = currentPlaces;
+                        showRoutesWithDetour();
                     }
                   }
                 }                
-                places.push(currentPlace);
             }
-            places.sort(function(a, b){
-                return a.distanceToDestination + a.distanceFromPOR - b.distanceFromPOR - b.distanceToDestination;
-            });
-            places.reverse();
-            currentPOR.places = places;
-            showRoutesWithDetour();
+            
         }
     }
 }
